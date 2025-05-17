@@ -1,7 +1,7 @@
 // components/ui/button.test.tsx
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Button } from "./button";
+import { Button } from "../components/ui/button";
 
 describe("Button component", () => {
   it("renders with default text", () => {
