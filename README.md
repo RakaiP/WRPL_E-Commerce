@@ -1,6 +1,6 @@
 # Merchandise E-Commerce Website
 
-This project is developed as part of the **WRPL** course for the **CSB class**. It is a merchandise-focused e-commerce platform built by group of 5 people consisting of two main applications:
+This project is developed as part of the **WRPL** course for the **CSB class**. It is a merchandise-focused e-commerce platform built by a group of 5 people, consisting of two main applications:
 
 ---
 
@@ -34,8 +34,24 @@ This is the admin interface (for store management, internal name: **mnmmin**) th
 
 ---
 
+## 📽️ Base Tutorial & Adaptation Notes
+
+We followed the [10-hour eCommerce tutorial](https://www.youtube.com/watch?v=5miHyP6lExg) by [@codewithantonio](https://www.youtube.com/@codewithantonio), published in 2023, as the foundation for this project.
+
+However, since many libraries and frameworks (e.g., Next.js, Prisma, Clerk, ShadCN UI) have evolved significantly since then, **we had to research and adapt to modern best practices** to ensure our implementation remains up-to-date, secure, and scalable. This includes:
+
+- Updating deprecated APIs or syntax in Next.js and ShadCN UI
+- Refactoring components for improved performance and readability
+- Modifying authentication and database flows to match the latest Clerk/Auth.js and Prisma standards
+- Fixing TypeScript type errors due to newer library versions
+- Revising project structure to support cleaner separation of concerns
+
+This process was valuable not only for building a solid foundation but also for understanding **how to maintain and modernize legacy codebases** in real-world development.
+
+---
+
 ## 👥 Team Members
-- Rakai Andaru Priandra 23/511442/PA/21796
+- Rakai Andaru Priandra – 23/511442/PA/21796
 - 
 - 
 - 
