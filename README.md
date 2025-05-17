@@ -1,11 +1,6 @@
 # Merchandise E-Commerce Website
 
-This project is developed as part of the **WRPL** course for the **CSB class**. It is a merchandise-focused e-commerce platform built by a group consist of :
-
-- Rakai Andaru Priandra 23/511442/PA/21796
-
-
-consisting of two main applications:
+This project is developed as part of the **WRPL** course for the **CSB class**. It is a merchandise-focused e-commerce platform built by group of 5 people consisting of two main applications:
 
 ---
 
@@ -40,7 +35,7 @@ This is the admin interface (for store management, internal name: **mnmmin**) th
 ---
 
 ## 👥 Team Members
-- 
+- Rakai Andaru Priandra 23/511442/PA/21796
 - 
 - 
 - 
