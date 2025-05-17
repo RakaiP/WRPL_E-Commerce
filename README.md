@@ -6,14 +6,14 @@ This project is developed as part of the **WRPL** course for the **CSB class**. 
 
 ## 🔹 Project Structure
 
-### `ecommerce/` – Customer Interface
+### `ecommerce-store/` – Customer Interface
 This is the customer-facing front-end application, where users can:
 - Browse and search merchandise
 - View product details
 - Add items to the cart and checkout
 - Manage their profile and orders
 
-### `ecommerce-store/` – Admin Dashboard
+### `ecommerce/` – Admin Dashboard
 This is the admin interface (for store management, internal name: **mnmmin**) that allows staff to:
 - Manage merchandise inventory
 - View and manage customer orders
