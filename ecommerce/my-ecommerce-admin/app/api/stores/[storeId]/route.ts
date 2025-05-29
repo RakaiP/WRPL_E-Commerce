@@ -1,4 +1,3 @@
-
 import { NextResponse } from "next/server";
 import { auth } from "@clerk/nextjs/server";
 
@@ -52,27 +51,36 @@ export async function DELETE(
 ){
     try{
         const { userId } = await auth();
-        
+        const asyncparams = await params;
         if(!userId){
             return new NextResponse("Unauthorized", {status: 401});
         }
+        
 
-
-        if(!params.storeId){
+        if(!asyncparams.storeId){
             return new NextResponse("Missing storeId", {status: 400});
         }
         
-        const asyncparams = await params;
+        // Check if store exists and belongs to user
+        const storeExists = await prismadb.store.findFirst({
+            where: {
+                id: asyncparams.storeId,
+                userId
+            }
+        });
+        
+        if (!storeExists) {
+            return new NextResponse("Store not found", {status: 404});
+        }
+        
         const store = await prismadb.store.deleteMany({
             where: {
                 id: asyncparams.storeId,
                 userId
             }
         });
-
-
     
-    return NextResponse.json(store);
+        return NextResponse.json(store);
     }catch (error){
         console.log('Store DELETE Error:', error);
         return new NextResponse("Internal Server Error", {status: 500});

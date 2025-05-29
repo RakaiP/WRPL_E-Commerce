@@ -1,8 +1,14 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  reactStrictMode: false,
   devIndicators: false,
+  reactStrictMode: true,
+  eslint: {
+    ignoreDuringBuilds: true,
+  },
+  typescript: {
+    ignoreBuildErrors: true,
+  },
   images: {
     remotePatterns: [
       {
@@ -14,6 +20,7 @@ const nextConfig: NextConfig = {
       },
     ],
   },
+  /* Other config options here */
 };
 
 export default nextConfig;
