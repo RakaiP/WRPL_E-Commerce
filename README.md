@@ -52,7 +52,7 @@ This process was valuable not only for building a solid foundation but also for 
 
 ## 👥 Team Members
 - Rakai Andaru Priandra – 23/511442/PA/21796
-- 
+- Muhammad Naufal Zahir – 23/511471/PA/21804
 - 
 - 
 - 
