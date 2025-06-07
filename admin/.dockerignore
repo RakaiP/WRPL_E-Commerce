@@ -8,3 +8,4 @@ README.md
 .DS_Store
 coverage
 .nyc_output
+.env.local
