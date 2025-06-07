@@ -1,4 +1,0 @@
- const title = initialData ? "Edit Category" : "New Category";
-    const description = initialData ? "Update Category Information" : "Create a new Category";
-    const toastMessage = initialData ? "Category updated" : "Category created";
-    const action = initialData ? "Save changes" : "Create Category";

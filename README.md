@@ -6,31 +6,57 @@ This project is developed as part of the **WRPL** course for the **CSB class**. 
 
 ## 🔹 Project Structure
 
-### `ecommerce-store/` – Customer Interface
-This is the customer-facing front-end application, where users can:
-- Browse and search merchandise
-- View product details
-- Add items to the cart and checkout
-- Manage their profile and orders
+### `my-ecommerce-admin/` – Admin Dashboard & API Server
+This is the admin interface and API provider that:
+- **Admin Interface**: Allows staff to manage merchandise inventory, orders, promotions, and analytics
+- **API Server**: Provides REST/GraphQL APIs for the customer application
+- **Database**: Contains Prisma schema and handles all database operations
+- **Authentication**: Manages admin authentication and authorization
 
-### `ecommerce/` – Admin Dashboard
-This is the admin interface (for store management, internal name: **mnmmin**) that allows staff to:
-- Manage merchandise inventory
-- View and manage customer orders
-- Handle promotions and discounts
-- View analytics and sales data
+### `my-ecommerce-customer/` – Customer Store Frontend
+This is the customer-facing application that:
+- Consumes APIs from the admin application
+- Provides customer interface for browsing, cart, and checkout
+- Handles customer authentication separately
+- No direct database access (all data comes through admin APIs)
 
 ---
 
 ## 🛠️ Tech Stack
-- Next.js
+
+### Admin Application
+- Next.js (API Routes + Admin UI)
 - TypeScript
-- Tailwind CSS
-- ShadCN UI
-- Prisma + PostgreSQL
-- Clerk/Auth.js (authentication)
-- Uploadthing (for image uploads)
-- Stripe (payment integration)
+- Tailwind CSS + ShadCN UI
+- **Prisma + PostgreSQL** (Database layer)
+- Clerk/Auth.js (Admin authentication)
+- Uploadthing (Image uploads)
+
+### Customer Application
+- Next.js (Frontend only)
+- TypeScript
+- Tailwind CSS + ShadCN UI
+- **API Consumption** (No direct database)
+- Stripe (Payment integration)
+- Customer authentication (separate from admin)
+
+---
+
+## 🏗️ Architecture
+```
+┌─────────────────┐    HTTP/API     ┌──────────────────┐
+│   Customer      │ ──────────────> │   Admin          │
+│   Frontend      │                 │   Backend + UI   │
+│   (Port 3001)   │                 │   (Port 3000)    │
+└─────────────────┘                 └──────────────────┘
+                                            │
+                                            ▼
+                                    ┌──────────────────┐
+                                    │   PostgreSQL     │
+                                    │   Database       │
+                                    │   (Port 5432)    │
+                                    └──────────────────┘
+```
 
 ---
 
@@ -62,6 +88,82 @@ This process was valuable not only for building a solid foundation but also for 
 
 ## 📁 How to Run the Project
 
-### 1. Install dependencies
+### Option 1: Using Docker Compose (Recommended)
 ```bash
+# Build and run all services (database + admin + customer)
+docker-compose up --build
+
+# Or run in background
+docker-compose up -d --build
+
+# Access the applications:
+# Admin Dashboard: http://localhost:3000
+# Customer Store: http://localhost:3001
+# Database: localhost:5432 (for external connections)
+```
+
+### Option 2: Using Single Docker Container
+```bash
+# Build and run both apps in one container
+docker build -t ecommerce-fullstack .
+docker run -p 3000:3000 -p 3001:3001 ecommerce-fullstack
+
+# Both applications will be available:
+# Admin Dashboard: http://localhost:3000
+# Customer Store: http://localhost:3001
+```
+
+### Option 3: Manual Setup
+```bash
+# Install dependencies for both apps
+cd my-ecommerce-admin
 npm install
+cd ../my-ecommerce-customer
+npm install
+
+# Run admin dashboard (port 3000)
+cd my-ecommerce-admin
+npm run dev
+
+# Run customer store (port 3001) - in a new terminal
+cd my-ecommerce-customer
+npm run dev
+```
+
+### Database Credentials
+- **Host**: localhost (or `database` from within containers)
+- **Port**: 5432
+- **Database**: ecommerce_db
+- **Username**: ecommerce_user
+- **Password**: ecommerce_password
+
+### 🐳 Docker Commands
+```bash
+# Stop all containers
+docker-compose down
+
+# Stop and remove volumes (⚠️ This will delete database data)
+docker-compose down -v
+
+# Rebuild containers
+docker-compose up --build --force-recreate
+
+# View logs
+docker-compose logs -f
+
+# View specific service logs
+docker-compose logs -f database
+docker-compose logs -f admin
+docker-compose logs -f customer
+
+# Access database directly
+docker-compose exec database psql -U ecommerce_user -d ecommerce_db
+
+# Clean up unused Docker resources
+docker system prune -a
+```
+
+### 🔧 Development vs Production
+- **Development**: Uses `docker-compose up` with hot reloading and volume mounts
+- **Production**: Uses optimized builds with standalone Next.js output
+- Each Dockerfile has multi-stage builds for both development and production

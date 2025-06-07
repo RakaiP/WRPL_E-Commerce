@@ -1,0 +1,71 @@
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: ecommerce-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - ecommerce-network
+
+  # Admin Application
+  admin:
+    build:
+      context: ./admin
+      dockerfile: Dockerfile
+      target: development
+    container_name: ecommerce-admin
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    env_file:
+      - ./admin/.env
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgresql://postgres:postgres123@postgres:5432/ecommerce?schema=public
+    depends_on:
+      - postgres
+    networks:
+      - ecommerce-network
+    volumes:
+      - ./admin:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm install --ignore-scripts && npx prisma generate && npx prisma db push && npm run dev -- --port 3000"
+
+  # Store Application
+  store:
+    build:
+      context: ./store
+      dockerfile: Dockerfile
+      target: development
+    container_name: ecommerce-store
+    restart: unless-stopped
+    ports:
+      - "3001:3001"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://admin:3000/api/b3ecb890-f0d8-4001-97eb-f95e8484c4e3
+    depends_on:
+      - admin
+    networks:
+      - ecommerce-network
+    volumes:
+      - ./store:/app
+      - /app/node_modules
+      - /app/.next
+    command: sh -c "npm install && npm run dev -- --port 3001"
+
+volumes:
+  postgres_data:
+
+networks:
+  ecommerce-network:
+    driver: bridge
