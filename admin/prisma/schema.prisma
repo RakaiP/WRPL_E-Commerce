@@ -3,9 +3,9 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "cockroachdb"
+  // Use the environment variable DATABASE_URL to connect to the database
   url = env("DATABASE_URL")
-  relationMode = "prisma"
 }
 
 model Store {

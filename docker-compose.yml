@@ -1,27 +1,11 @@
 services:
-  # PostgreSQL Database
-  postgres:
-    image: postgres:15-alpine
-    container_name: ecommerce-postgres
-    restart: unless-stopped
-    environment:
-      POSTGRES_DB: ecommerce
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres123
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - ecommerce-network
-
   # Admin Application
   admin:
     build:
       context: ./admin
       dockerfile: Dockerfile
       target: development
-    container_name: ecommerce-admin
+    container_name: merchy-admin
     restart: unless-stopped
     ports:
       - "3000:3000"
@@ -29,9 +13,6 @@ services:
       - ./admin/.env
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:postgres123@postgres:5432/ecommerce?schema=public
-    depends_on:
-      - postgres
     networks:
       - ecommerce-network
     volumes:
@@ -46,13 +27,13 @@ services:
       context: ./store
       dockerfile: Dockerfile
       target: development
-    container_name: ecommerce-store
+    container_name: merchy-store
     restart: unless-stopped
     ports:
       - "3001:3001"
     environment:
       - NODE_ENV=development
-      - NEXT_PUBLIC_API_URL=http://admin:3000/api/b3ecb890-f0d8-4001-97eb-f95e8484c4e3
+      - NEXT_PUBLIC_API_URL=http://admin:3000/api/077c1cca-28ac-4cfe-a1af-be6894ef6dfe
     depends_on:
       - admin
     networks:
