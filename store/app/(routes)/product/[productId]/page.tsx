@@ -1,3 +1,4 @@
+import { notFound } from 'next/navigation';
 import getProduct from "@/actions/get-product";
 import getProducts from "@/actions/get-products";
 import Gallery from "@/components/gallery";
@@ -9,8 +10,16 @@ type Params = Promise<{ productId: string }>
 
 const ProductPage = async ({ params }: { params: Params }) => {
     const { productId } = await params;
+    
+    // Get the product and handle if it doesn't exist
     const product = await getProduct(productId);
-    const suggestProducts = await getProducts({ categoryId: product?.category?.id })
+    
+    if (!product) {
+        notFound();
+    }
+    
+    const suggestProducts = await getProducts({ categoryId: product?.category?.id });
+    
     return ( 
         <div className="bg-white">
             <Container>
