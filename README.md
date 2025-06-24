@@ -1,168 +1,228 @@
-# Merchandise E-Commerce Website
+# Merchy: A Modern Full-Stack E-Commerce Platform
 
-This project is developed as part of the **WRPL** course for the **CSB class**. It is a merchandise-focused e-commerce platform built by a group of 5 people, consisting of two main applications:
+A merchandise-focused e-commerce platform built for the **WRPL (Rekayasa Perangkat Lunak Lanjut)** course at Universitas Gadjah Mada.
 
----
+## 🚀 Live Demo
 
-## 🔹 Project Structure
+Check out the live deployed applications on Vercel:
 
-### `my-ecommerce-admin/` – Admin Dashboard & API Server
-This is the admin interface and API provider that:
-- **Admin Interface**: Allows staff to manage merchandise inventory, orders, promotions, and analytics
-- **API Server**: Provides REST/GraphQL APIs for the customer application
-- **Database**: Contains Prisma schema and handles all database operations
-- **Authentication**: Manages admin authentication and authorization
+* **Customer Storefront:** [**https://merchy-customer.vercel.app/**](https://merchy-customer.vercel.app/)
 
-### `my-ecommerce-customer/` – Customer Store Frontend
-This is the customer-facing application that:
-- Consumes APIs from the admin application
-- Provides customer interface for browsing, cart, and checkout
-- Handles customer authentication separately
-- No direct database access (all data comes through admin APIs)
+* **Admin Dashboard:** [**https://merchy-admin.vercel.app/**](https://merchy-admin.vercel.app/)
 
----
+## 📋 Table of Contents
+
+* [Key Features](#-key-features)
+* [Architecture](#-architecture)
+* [Tech Stack](#️-tech-stack)
+* [Getting Started (Local Development)](#-getting-started-local-development)
+* [Learning & Adaptation Journey](#-learning--adaptation-journey)
+* [Team Members](#-team-members)
+* [Docker Instructions (Legacy)](#-docker-instructions-legacy)
+
+## ✨ Key Features
+
+This project is a monorepo containing two separate Next.js applications:
+
+### `my-ecommerce-admin/` (Admin Dashboard & API Server)
+
+* **Multi-Store Management:** Create and manage multiple unique stores from a single admin panel.
+* **Inventory Management:** Full CRUD operations for products, categories, sizes, and colors per store.
+* **Order Tracking:** View and manage customer orders for each store.
+* **Promotions:** Create and manage billboards for each storefront.
+* **Analytics:** A central dashboard with revenue, sales, and inventory insights per store.
+* **API Server:** Serves RESTful APIs for each store, identified by a unique `storeId`.
+* **Secure Authentication:** Protected routes for admin users, managed via Clerk.
+
+### `my-ecommerce-customer/` (Customer Storefront)
+
+* **Dynamic Storefront:** Consumes data from a specific store's API endpoint.
+* **Shopping Cart:** A fully persistent shopping cart.
+* **Secure Checkout:** Seamless payment integration using Stripe.
+* **Order History:** View past orders (feature to be implemented).
+* **API-Driven:** All data is fetched dynamically from the Admin API.
+
+## 🏗️ Architecture
+
+The project follows a decoupled architecture where the customer-facing application is completely separate from the admin and backend services. This allows for independent scaling and development.
+
+```
+                                          ┌───────────────────────┐
+                                          │   Cloud PostgreSQL DB │
+                                          └───────────┬───────────┘
+                                                      │ (Prisma ORM)
+                                                      │
+                                          ┌───────────────────────┐
+                                          │      Admin Backend    │
+                                          │  (Next.js API Routes) │
+                                          └─┬───────────────────┬─┘
+                                            │                   │ (Serves UI)
+(Consumes REST API: /api/{storeId})         │                   │
+                                            │                   │
+┌───────────────────────────┐               │            ┌────────────────────┐
+│     Customer Frontend     │<--------------+            │   Admin Dashboard  │
+│      (Vercel/Port 3001)   │                            │ (Vercel/Port 3000) │
+└─────────────┬─────────────┘                            └──────────┬─────────┘
+              │                                                     │
+              │ (Browsing, Cart, Checkout)                          │ (Store/Product Mgmt)
+              │                                                     │
+┌─────────────┴─────────────┐                            ┌──────────┴──────────┐
+│         Customer          │                            │        Admin        │
+└───────────────────────────┘                            └─────────────────────┘
+```
 
 ## 🛠️ Tech Stack
 
-### Admin Application
-- Next.js (API Routes + Admin UI)
-- TypeScript
-- Tailwind CSS + ShadCN UI
-- **Prisma + PostgreSQL** (Database layer)
-- Clerk/Auth.js (Admin authentication)
-- Uploadthing (Image uploads)
+### Core Technologies
 
-### Customer Application
-- Next.js (Frontend only)
-- TypeScript
-- Tailwind CSS + ShadCN UI
-- **API Consumption** (No direct database)
-- Stripe (Payment integration)
-- Customer authentication (separate from admin)
+* **Framework:** Next.js 14 (App Router)
+* **Language:** TypeScript
+* **Styling:** Tailwind CSS + ShadCN UI
+* **Database ORM:** Prisma
 
----
+### Admin & Backend (`my-ecommerce-admin`)
 
-## 🏗️ Architecture
-```
-┌─────────────────┐    HTTP/API     ┌──────────────────┐
-│   Customer      │ ──────────────> │   Admin          │
-│   Frontend      │                 │   Backend + UI   │
-│   (Port 3001)   │                 │   (Port 3000)    │
-└─────────────────┘                 └──────────────────┘
-                                            │
-                                            ▼
-                                    ┌──────────────────┐
-                                    │   PostgreSQL     │
-                                    │   Database       │
-                                    │   (Port 5432)    │
-                                    └──────────────────┘
-```
+* **Authentication:** Clerk
+* **Database:** PostgreSQL (hosted on a cloud provider)
+* **Image Uploads:** Uploadthing
+* **API:** Next.js API Routes
 
----
+### Customer Frontend (`my-ecommerce-customer`)
 
-## 📽️ Base Tutorial & Adaptation Notes
+* **Payment Gateway:** Stripe
+* **State Management:** Zustand
+* **API Consumption:** `axios` for fetching data from the admin backend.
 
-We followed the [10-hour eCommerce tutorial](https://www.youtube.com/watch?v=5miHyP6lExg) by [@codewithantonio](https://www.youtube.com/@codewithantonio), published in 2023, as the foundation for this project.
+## 🏁 Getting Started (Local Development)
 
-However, since many libraries and frameworks (e.g., Next.js, Prisma, Clerk, ShadCN UI) have evolved significantly since then, **we had to research and adapt to modern best practices** to ensure our implementation remains up-to-date, secure, and scalable. This includes:
+This project is configured to run with a cloud-hosted PostgreSQL database. The recommended way to run it locally is to set up your own environment variables.
 
-- Updating deprecated APIs or syntax in Next.js and ShadCN UI
-- Refactoring components for improved performance and readability
-- Modifying authentication and database flows to match the latest Clerk/Auth.js and Prisma standards
-- Fixing TypeScript type errors due to newer library versions
-- Revising project structure to support cleaner separation of concerns
+### Prerequisites
 
-This process was valuable not only for building a solid foundation but also for understanding **how to maintain and modernize legacy codebases** in real-world development.
+* Node.js (v18 or later)
+* `npm` (or `yarn`, `pnpm`)
+* A free PostgreSQL database instance (e.g., from Vercel, Neon, or Supabase).
 
----
+### Step-by-Step Setup
+
+1. **Clone the repository:**
+   ```bash
+   git clone [https://github.com/RakaiP/WRPL_E-Commerce.git](https://github.com/RakaiP/WRPL_E-Commerce.git)
+   cd WRPL_E-Commerce
+   ```
+
+2. **Set up Environment Variables:**
+   This is the most important step. You need to create a `.env` file in **both** the `my-ecommerce-admin` and `my-ecommerce-customer` directories.
+
+   * In `my-ecommerce-admin/`, copy the example file:
+     ```bash
+     cp my-ecommerce-admin/.env.example my-ecommerce-admin/.env
+     ```
+
+   * In `my-ecommerce-customer/`, copy the example file:
+     ```bash
+     cp my-ecommerce-customer/.env.example my-ecommerce-customer/.env
+     ```
+
+   Now, **edit both `.env` files** and fill in the values with your own keys and URLs. Pay close attention to the variable in the customer app.
+
+   **In `my-ecommerce-admin/.env`:**
+   * `DATABASE_URL`: Your cloud PostgreSQL connection string.
+   * `NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY` & `CLERK_SECRET_KEY`
+   * `UPLOADTHING_SECRET` & `UPLOADTHING_APP_ID`
+   * ... and other variables as specified in the example file.
+
+   **In `my-ecommerce-customer/.env`:**
+   * **`NEXT_PUBLIC_API_URL`**: This is crucial. It's the API endpoint of the store you want to connect to. After creating a store in the admin dashboard, get its ID from the URL (e.g., in `.../settings/4d5b...`). Your local URL will be `http://localhost:3000/api/{storeId}`.
+   * `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
+   * ... and other variables.
+
+3. **Install Dependencies:**
+   Run the installation command in each application's directory.
+   ```bash
+   # Install dependencies for the admin app
+   cd my-ecommerce-admin
+   npm install
+   
+   # Install dependencies for the customer app
+   cd ../my-ecommerce-customer
+   npm install
+   ```
+
+4. **Push Database Schema:**
+   From the `my-ecommerce-admin` directory, push the Prisma schema to your cloud database. This will create all the necessary tables.
+   ```bash
+   # Navigate to the admin directory if you aren't already there
+   cd my-ecommerce-admin
+   npx prisma db push
+   ```
+
+5. **Run the Applications:**
+   You'll need two separate terminal windows to run both the admin and customer apps simultaneously.
+
+   * **Terminal 1 (Admin App):**
+     ```bash
+     cd my-ecommerce-admin
+     npm run dev
+     ```
+     The admin dashboard will be available at `http://localhost:3000`. Log in, create your first store, and get its `storeId`.
+
+   * **Terminal 2 (Customer App):**
+     ```bash
+     cd my-ecommerce-customer
+     npm run dev
+     ```
+     The customer storefront will be available at `http://localhost:3001`.
+
+## 💡 Learning & Adaptation Journey
+
+This project was initially based on the excellent [10-hour eCommerce tutorial by @codewithantonio (2023)](https://www.youtube.com/watch?v=5miHyP6lq6o).
+
+However, the web development ecosystem moves incredibly fast. A significant part of our learning process involved **modernizing the legacy codebase** to align with current best practices. This required independent research and problem-solving to:
+
+* **Update Deprecated Code:** Refactored syntax for newer versions of Next.js and ShadCN UI.
+* **Modernize Authentication:** Adapted the authentication flow to match the latest standards from Clerk.
+* **Type Safety:** Resolved numerous TypeScript errors that arose from updated library versions.
+* **Improve Project Structure:** Re-organized components and files for better maintainability and separation of concerns.
+
+This adaptation was invaluable, providing real-world experience in maintaining and evolving a codebase over time.
 
 ## 👥 Team Members
-- Rakai Andaru Priandra – 23/511442/PA/21796
-- Muhammad Naufal Zahir – 23/511471/PA/21804
-- Muhammad Razan Alamudi - 23/511396/PA/21784
-- 
-- 
 
----
+* **Rakai Andaru Priandra** – 23/511442/PA/21796
+* **Muhammad Naufal Zahir** – 23/511471/PA/21804
+* *(and 3 other team members)*
 
-## 📁 How to Run the Project
+## 🐳 Docker Instructions (Legacy)
+<details>
+  <summary><strong>Click to expand for original Docker setup</strong></summary>
 
-### Option 1: Using Docker Compose (Recommended)
-```bash
-# Build and run all services (database + admin + customer)
-docker-compose up --build
+  > **Note:** The following instructions are for the original project setup which used a local PostgreSQL database via Docker. For the current cloud database setup, the **[Getting Started](#-getting-started-local-development)** method above is recommended.
 
-# Or run in background
-docker-compose up -d --build
+  ### Option 1: Using Docker Compose
+  This will build and run all services (database, admin, customer).
+  ```bash
+  # Build and run all services
+  docker-compose up --build
 
-# Access the applications:
-# Admin Dashboard: http://localhost:3000
-# Customer Store: http://localhost:3001
-# Database: localhost:5432 (for external connections)
-```
+  # Or run in the background
+  docker-compose up -d --build
+  ```
+  * Admin Dashboard: `http://localhost:3000`
+  * Customer Store: `http://localhost:3001`
 
-### Option 2: Using Single Docker Container
-```bash
-# Build and run both apps in one container
-docker build -t ecommerce-fullstack .
-docker run -p 3000:3000 -p 3001:3001 ecommerce-fullstack
+  ### Useful Docker Commands
+  ```bash
+  # Stop all containers
+  docker-compose down
 
-# Both applications will be available:
-# Admin Dashboard: http://localhost:3000
-# Customer Store: http://localhost:3001
-```
+  # Stop and remove volumes (⚠️ This will delete all database data)
+  docker-compose down -v
 
-### Option 3: Manual Setup
-```bash
-# Install dependencies for both apps
-cd my-ecommerce-admin
-npm install
-cd ../my-ecommerce-customer
-npm install
+  # View logs for all services
+  docker-compose logs -f
 
-# Run admin dashboard (port 3000)
-cd my-ecommerce-admin
-npm run dev
-
-# Run customer store (port 3001) - in a new terminal
-cd my-ecommerce-customer
-npm run dev
-```
-
-### Database Credentials
-- **Host**: localhost (or `database` from within containers)
-- **Port**: 5432
-- **Database**: ecommerce_db
-- **Username**: ecommerce_user
-- **Password**: ecommerce_password
-
-### 🐳 Docker Commands
-```bash
-# Stop all containers
-docker-compose down
-
-# Stop and remove volumes (⚠️ This will delete database data)
-docker-compose down -v
-
-# Rebuild containers
-docker-compose up --build --force-recreate
-
-# View logs
-docker-compose logs -f
-
-# View specific service logs
-docker-compose logs -f database
-docker-compose logs -f admin
-docker-compose logs -f customer
-
-# Access database directly
-docker-compose exec database psql -U ecommerce_user -d ecommerce_db
-
-# Clean up unused Docker resources
-docker system prune -a
-```
-
-### 🔧 Development vs Production
-- **Development**: Uses `docker-compose up` with hot reloading and volume mounts
-- **Production**: Uses optimized builds with standalone Next.js output
-- Each Dockerfile has multi-stage builds for both development and production
+  # Access the database directly
+  docker-compose exec database psql -U ecommerce_user -d ecommerce_db
+  ```
+</details>
