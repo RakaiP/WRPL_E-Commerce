@@ -11,7 +11,10 @@ export async function POST(req: Request) {
     let event: Stripe.Event;
 
     try {
-        event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET!)
+        if (!process.env.STRIPE_WEBHOOK_SECRET) {
+            throw new Error("STRIPE_WEBHOOK_SECRET is not configured");
+        }
+        event = stripe.webhooks.constructEvent(body, signature, process.env.STRIPE_WEBHOOK_SECRET)
     } catch (error: any) {
          return new NextResponse(`Webhook Error: ${error.message}`, { status: 400 });
     }
