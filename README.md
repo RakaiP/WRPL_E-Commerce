@@ -193,6 +193,7 @@ This adaptation was invaluable, providing real-world experience in maintaining a
 * **Muhammad Naufal Zahir** – 23/511471/PA/21804
 * **Bambang Abhinawa Pinakasakti** - 23/511433/PA/21794
 * **Muhammad Razan Alamudi** - 23/511396/PA/21784
+* **Ken Bima Satria Gandasasmita** - 23/516183/PA/22062
 
 ## 🐳 Docker Instructions (Legacy)
 <details>
