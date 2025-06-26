@@ -6,6 +6,6 @@ module.exports = {
     '!**/node_modules/**'
   ],
   coverageDirectory: 'coverage',
-  setupFilesAfterEnv: ['@testing-library/jest-dom/extend-expect'],
+  setupFilesAfterEnv: ['<rootDir>/node_modules/@testing-library/jest-dom/extend-expect.js'],
   verbose: true
 };
