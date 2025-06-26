@@ -192,7 +192,7 @@ This adaptation was invaluable, providing real-world experience in maintaining a
 * **Rakai Andaru Priandra** – 23/511442/PA/21796
 * **Muhammad Naufal Zahir** – 23/511471/PA/21804
 * **Bambang Abhinawa Pinakasakti** - 23/511433/PA/21794
-* *(and 2 other team members)*
+* **Muhammad Razan Alamudi** - 23/511396/PA/21784
 
 ## 🐳 Docker Instructions (Legacy)
 <details>
