@@ -25,10 +25,7 @@ jobs:
 
       - name: Install dependencies
         run: npm install
-
-      - name: Ensure jest-dom is present
-        run: npm install --save-dev @testing-library/jest-dom
-
+        
       - name: Run lint
         run: npm run lint
 
